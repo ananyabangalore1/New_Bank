@@ -1,13 +1,15 @@
-from django.urls import path
-from . import views
-from django.contrib.auth.views import LoginView
-from django.urls import path
-from . import views
+from django.contrib import admin
+from django.urls import path, include
+from django.shortcuts import redirect
+
+# Redirect root URL to the login page
+def home(request):
+    return redirect('login')  # Redirect to the login page
 
 urlpatterns = [
-    path('login/',LoginView.as_view(template_name='user_profile/login.html'), name='login'),
-    path('login_success/',views.login_success, name='login_success'),  # Login success redirects to profile
-    path('profile/<str:username>/', views.profile, name='user_profile'),
-    path('profile/update/',views.generate_ui, name='update_ui'),  # Update UI via SnapSynth
+    path('', home, name='home'),  # Root path redirects to login page
+    path('admin/', admin.site.urls),  # Admin page URL
+    path('login/', include('django.contrib.auth.urls')),  # Built-in login view
+    path('user/', include('user_profile.urls')),  # Include user profile URLs (if any)
 ]
 
